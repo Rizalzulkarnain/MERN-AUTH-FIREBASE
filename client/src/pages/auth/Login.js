@@ -23,12 +23,22 @@ const Login = ({ history }) => {
   const { error, login, loginGoogle } = auth;
 
   useEffect(() => {
-    if (login || loginGoogle) {
+    if (login) {
       if (login.role === 'subscriber') {
         history.push('/subscriber');
       }
 
       if (login.role === 'admin') {
+        history.push('/admin');
+      }
+    }
+
+    if (loginGoogle) {
+      if (loginGoogle.role === 'subscriber') {
+        history.push('/subscriber');
+      }
+
+      if (loginGoogle.role === 'admin') {
         history.push('/admin');
       }
     }

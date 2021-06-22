@@ -50,15 +50,10 @@ export const userRegisterComplete =
         await user.updatePassword(password);
         const idTokenResult = await user.getIdTokenResult();
 
-        const { data } = await API.createOrUpdateUser(idTokenResult.token);
+        const res = await API.createOrUpdateUser(idTokenResult.token);
         dispatch({
           type: constant.REGISTER_COMPLETE_SUCCESS,
-          payload: {
-            _id: data.data._id,
-            email: data.data.email,
-            role: data.data.role,
-            token: idTokenResult.token,
-          },
+          payload: res.data.data,
         });
       }
     } catch (error) {
@@ -81,15 +76,10 @@ export const userLogin = (email, password) => async (dispatch) => {
     const result = await auth.signInWithEmailAndPassword(email, password);
     const { user } = result;
     const idTokenResult = await user.getIdTokenResult();
-    const { data } = await API.createOrUpdateUser(idTokenResult.token);
+    const res = await API.createOrUpdateUser(idTokenResult.token);
     dispatch({
       type: constant.LOGGED_IN_USER_SUCCESS,
-      payload: {
-        _id: data.data._id,
-        email: data.data.email,
-        role: data.data.role,
-        token: idTokenResult.token,
-      },
+      payload: res.data.data,
     });
   } catch (error) {
     dispatch({
@@ -111,15 +101,10 @@ export const userLoginGoogle = () => async (dispatch) => {
     auth.signInWithPopup(googleAuthProvider).then(async (result) => {
       const { user } = result;
       const idTokenResult = await user.getIdTokenResult();
-      const { data } = await API.createOrUpdateUser(idTokenResult.token);
+      const res = await API.createOrUpdateUser(idTokenResult.token);
       dispatch({
         type: constant.LOGIN_GOOGLE_SUCCESS,
-        payload: {
-          _id: data.data._id,
-          email: data.data.email,
-          role: data.data.role,
-          token: idTokenResult.token,
-        },
+        payload: res.data.data,
       });
     });
   } catch (error) {
@@ -143,7 +128,6 @@ export const getUser = () => async (dispatch) => {
       if (user) {
         const idTokenResult = await user.getIdTokenResult();
         const res = await API.currentUser(idTokenResult.token);
-        console.log(res.data);
 
         dispatch({
           type: constant.GET_USER_SUCCESS,
